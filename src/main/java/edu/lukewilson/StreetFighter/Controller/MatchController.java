@@ -71,14 +71,17 @@ public class MatchController {
 
     @GetMapping("/character-stats")
     public PlayerCharacterStats getStatsByCharacter(
-        @RequestParam(required = false) String characterName, 
+        @RequestParam(required = false) String characterName, @RequestParam(required = false) String opponentCharacter,
         Authentication authentication
     ) {
         User user = findUser(authentication);
         if (characterName == null) {
             return playerCharacterStatsRepository.findByUserAndPlayerCharacter(user.getId(), null);
         }
-        return playerCharacterStatsRepository.findByUserAndPlayerCharacter(user.getId(), characterName);
+        if (opponentCharacter == null) {
+            return playerCharacterStatsRepository.findByUserAndPlayerCharacter(user.getId(), characterName);
+        }
+        return playerCharacterStatsRepository.findByUserAndPlayerCharacterAndOpponentCharacter(user.getId(), characterName, opponentCharacter);
     }
 
     /**
