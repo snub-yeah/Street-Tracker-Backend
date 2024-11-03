@@ -8,7 +8,7 @@ public class RedirectController {
 
     @GetMapping("/redirectToFrontend")
     public String redirectToFrontend() {
-        // Redirect the user to the frontend's login page
+        // redirect the user to the frontend's login page. i can't even remember if this is being used lmao
         return "redirect:http://localhost:3000/login";
     }
 }

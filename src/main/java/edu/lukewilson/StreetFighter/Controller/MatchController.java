@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.lukewilson.StreetFighter.model.Match;
+import edu.lukewilson.StreetFighter.model.PlayerCharacterStats;
 import edu.lukewilson.StreetFighter.model.User;
+import edu.lukewilson.StreetFighter.repository.PlayerCharacterStatsRepository;
 import edu.lukewilson.StreetFighter.service.MatchService;
 import edu.lukewilson.StreetFighter.service.UserService;
 
@@ -29,12 +32,19 @@ public class MatchController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PlayerCharacterStatsRepository playerCharacterStatsRepository;
+
+    /**
+     * This allows users to add a match to the database. Takes in a match and their authentication, then saves to repo.
+     * @param match --> the match info to be taken in including characters and time and stuff
+     * @param authentication --> the authentication sutff
+     * @return --> returns a match that is saved to repo.
+     */
     @PostMapping("/matches")
     public Match addMatch(@RequestBody Match match, Authentication authentication) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String auth0Id = jwt.getSubject();
-        
-        User user = userService.findUserByAuth0Id(auth0Id);
+        User user = findUser(authentication);
+
         match.setUser(user);
         match.setMatchTimestamp(LocalDateTime.now());
         
@@ -43,10 +53,7 @@ public class MatchController {
 
     @GetMapping("/matches")
     public ResponseEntity<Map<String, Object>> getUserMatches(Authentication authentication) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String auth0Id = jwt.getSubject();
-        
-        User user = userService.findUserByAuth0Id(auth0Id);
+        User user = findUser(authentication);
         if (user == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -60,5 +67,29 @@ public class MatchController {
         response.put("totalMatches", matchCount);
         
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/character-stats")
+    public PlayerCharacterStats getStatsByCharacter(
+        @RequestParam(required = false) String characterName, 
+        Authentication authentication
+    ) {
+        User user = findUser(authentication);
+        if (characterName == null) {
+            return playerCharacterStatsRepository.findByUserAndPlayerCharacter(user.getId(), null);
+        }
+        return playerCharacterStatsRepository.findByUserAndPlayerCharacter(user.getId(), characterName);
+    }
+
+    /**
+     * Method to find the userId of the currently logged in user based on their auth0 info
+     * @param authentication -- the authentication Auth0 class
+     * @return --> the user
+     */
+    private User findUser(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String auth0Id = jwt.getSubject();
+        
+        return userService.findUserByAuth0Id(auth0Id);
     }
 }

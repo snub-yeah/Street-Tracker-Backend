@@ -16,7 +16,7 @@ public class TestService {
 
     @Autowired
     private TestRepository testRepository;
-
+    //this entire thing can be deleted
     public List<Test> getAllTests() {
         List<Test> tests = testRepository.findAll();
         logger.info("Retrieved {} tests from the database", tests.size());

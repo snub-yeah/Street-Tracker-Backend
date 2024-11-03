@@ -12,7 +12,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "player_character_stats")
 public class PlayerCharacterStats {
-    //TODO: Add aggregation SQL command to count total games played with each character
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stats_id;

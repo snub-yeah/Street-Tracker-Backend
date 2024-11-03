@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 public class AudienceValidator implements OAuth2TokenValidator<Jwt> {
     private final String audience;
-
+    //this entire class was stolen lmaoooooo
     public AudienceValidator(String audience) {
         this.audience = audience;
     }

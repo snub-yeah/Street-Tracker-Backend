@@ -15,6 +15,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Creates or updates the user based on a JWT
+     * @param jwt --> the web token of the authenticated user
+     * @return --> the user created or returned
+     */
     @PostMapping("/api/user")
     public User createOrUpdateUser(@AuthenticationPrincipal Jwt jwt) {
         return userService.getOrCreateUser(jwt);
