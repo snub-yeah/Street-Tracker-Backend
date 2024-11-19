@@ -67,4 +67,9 @@ public class MatchService {
     public Long getMatchCountByUser(User user) {
         return matchRepository.countMatchesByUserId(user.getId());
     }
+
+    @Transactional
+    public void deleteMatchById(Long matchId) {
+        matchRepository.deleteMatchById(matchId);
+    }
 }
