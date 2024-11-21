@@ -19,4 +19,8 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
     @Modifying
     @Query(value = "DELETE FROM matches WHERE match_id = ?1", nativeQuery = true)
     void deleteMatchById(Long matchId);
+
+    @Modifying
+    @Query(value = "UPDATE matches SET user_character=?2, opponent_character=?3, result=?4 WHERE match_id=?1", nativeQuery = true)
+    void updateMatch(Long matchId, String userCharacter, String opponentCharacter, int result);
 }

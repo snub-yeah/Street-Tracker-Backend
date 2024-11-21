@@ -72,4 +72,9 @@ public class MatchService {
     public void deleteMatchById(Long matchId) {
         matchRepository.deleteMatchById(matchId);
     }
+
+    @Transactional
+    public void updateMatch(Long matchId, String userCharacter, String opponentCharacter, int result) {
+        matchRepository.updateMatch(matchId, userCharacter, opponentCharacter, result);
+    }
 }
