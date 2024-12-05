@@ -23,11 +23,12 @@ public class MatchService {
     @Transactional
     public Match addMatch(Match match) {
         // save the match
-        Match savedMatch = matchRepository.save(match);
+        matchRepository.addMatch(match.getUser().getId(), match.getUserCharacter(), match.getOpponentCharacter(), match.getResult(), match.getMatchTimestamp());
+        //Match savedMatch = matchRepository.save(match);
         
         updateCharacterStats(match);
         
-        return savedMatch;
+        return match;
     }
 
     private void updateCharacterStats(Match match) {
